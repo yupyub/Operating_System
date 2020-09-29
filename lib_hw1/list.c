@@ -555,22 +555,18 @@ void list_swap(struct list_elem *a, struct list_elem *b){
    a->next = bNext;
    b->next = aNext;
 }
-struct list_elem* findXth(struct list* List,int X){
-    if(list_empty(List))
-        return NULL;
+struct list_elem* list_findXth(struct list* List,int X){
     struct list_elem* el;
     int cnt = 0;
-    for(el = list_begin(List); el != list_end(List); el = list_next(el)){
-        if(cnt == X)
-            break;
+    for(el = list_begin(List); el != list_end(List)&&cnt<X; el = list_next(el)){
         cnt++;
     }
     return el;
 }
 void list_shuffle(struct list *list){
     srand(time(NULL));
-    int size = (int)list_size(list);
-    for(int i = 0;i<size;i++){
-        list_swap(findXth(list,i),findXth(list,rand()%size));
+    int Size = (int)list_size(list);
+    for(int i = 0;i<Size;i++){
+        //list_swap(list_findXth(list,i),list_findXth(list,rand()%Size));
     }
 }

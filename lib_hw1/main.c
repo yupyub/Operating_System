@@ -7,13 +7,13 @@
 #define LIST 1
 #define HASH 2
 #define BITMAP 3
-struct list List[10];
-struct hash Hash[10];
-struct bitmap* Bitmap[10];
 struct list_item{
     struct list_elem elem;
     int data;
 };
+struct list List[10];
+struct hash Hash[10];
+struct bitmap* Bitmap[10];
 void parser(char str[], int* argc, char argv[100][100],char sep[]){
     char *token;
     *argc = 0;
@@ -35,8 +35,9 @@ int main(){
     int Type = 0;
     while(1){
         fgets(input,100,stdin);
+        argv[0][0] = 0;
         parser(input,&argc,argv,", \f\n\r\t\v");
-        
+
         if(!strcmp(argv[0],"quit"))
             break;
         if(!strcmp(argv[0],"create")){
@@ -49,7 +50,7 @@ int main(){
 
             }
             else if(!strcmp(argv[1],"bitmap")){
-            
+
             }
         }
         else if(!strcmp(argv[0],"delete")){
@@ -133,8 +134,8 @@ int main(){
             else if(pos == 0)
                 list_push_front(&List[idx],&(newNode->elem));
             else{
-                struct list_elem* before = findXth(&List[idx],pos);
-                list_insert(before,&(newNode->elem));  
+                struct list_elem* bef = list_findXth(&(List[idx]),pos);
+                list_insert(bef,&(newNode->elem));
             }
         }
         else if(!strcmp(argv[0],"list_empty")){
@@ -172,7 +173,7 @@ int main(){
             int idx = argv[1][4]-'0';
             int pos;
             sscanf(argv[2],"%d",&pos);
-            struct list_elem* node = findXth(&List[idx],pos);
+            struct list_elem* node = list_findXth(&List[idx],pos);
             struct list_item* item = list_entry(node,struct list_item,elem);
             list_remove(node);
             free(item);
@@ -193,7 +194,7 @@ int main(){
             int num1,num2;
             sscanf(argv[2],"%d",&num1);
             sscanf(argv[3],"%d",&num2);
-            list_swap(findXth(&List[idx],num1),findXth(&List[idx],num2));
+            list_swap(list_findXth(&List[idx],num1),list_findXth(&List[idx],num2));
         }
         else if(!strcmp(argv[0],"list_shuffle")){
             int idx = argv[1][4]-'0';

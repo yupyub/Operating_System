@@ -23,6 +23,11 @@ void parser(char str[], int* argc, char argv[100][100],char sep[]){
         token = strtok(NULL,sep);
     }
 }
+bool list_comp(const struct list_elem* a, const struct list_elem* b, void* aux){
+    struct list_item* itemA = list_entry(a,struct list_item,elem);
+    struct list_item* itemB = list_entry(b,struct list_item,elem);
+    return itemA->data < itemB->data;
+}
 int main(){
     char input[100];
     int argc;
@@ -51,7 +56,9 @@ int main(){
             if(Type == LIST){
                 int idx = argv[1][4]-'0';
                 while(!list_empty(&List[idx])){
-                    free(list_pop_back(&List[idx]));
+                    struct list_elem* back = list_pop_back(&List[idx]);
+                    struct list_item* item = list_entry(back,struct list_item,elem);
+                    free(item);
                 }
             }
             else if(Type == HASH){
@@ -83,58 +90,114 @@ int main(){
             int idx = argv[1][4] - '0';
             int data;
             sscanf(argv[2], "%d", &data);
-            struct list_elem* newNode = (struct list_elem*)malloc(sizeof(struct list_elem));
-            struct list_item* item = list_entry(newNode,struct list_item,elem);
-            item->data = data;
-            list_push_back(&List[idx],newNode);
+            struct list_item* newNode = (struct list_item*)malloc(sizeof(struct list_item));
+            newNode->data = data;
+            list_push_back(&List[idx],&(newNode->elem));
         }
         else if(!strcmp(argv[0],"list_push_front")){
+            int idx = argv[1][4] - '0';
+            int data;
+            sscanf(argv[2], "%d", &data);
+            struct list_item* newNode = (struct list_item*)malloc(sizeof(struct list_item));
+            newNode->data = data;
+            list_push_front(&List[idx],&(newNode->elem));
 
         }
         else if(!strcmp(argv[0],"list_pop_back")){
-
+            int idx = argv[1][4]-'0';
+            struct list_elem* back = list_pop_back(&List[idx]);
+            struct list_item* item = list_entry(back,struct list_item,elem);
+            free(item);
         }
         else if(!strcmp(argv[0],"list_pop_front")){
+            int idx = argv[1][4]-'0';
+            struct list_elem* back = list_pop_front(&List[idx]);
+            struct list_item* item = list_entry(back,struct list_item,elem);
+            free(item);
 
         }
         else if(!strcmp(argv[0],"list_size")){
-
+            int idx = argv[1][4]-'0';
+            printf("%d\n",(int)list_size(&List[idx]));
         }
         else if(!strcmp(argv[0],"list_insert")){
-
+            int idx = argv[1][4]-'0';
+            int pos,data;
+            sscanf(argv[2],"%d",&pos);
+            sscanf(argv[3],"%d",&data);
+            struct list_item* newNode = (struct list_item*)malloc(sizeof(struct list_item));
+            newNode->data = data;
+            if(pos > (int)list_size(&List[idx])-1){
+                list_push_back(&List[idx],&(newNode->elem));
+            }
+            else if(pos == 0)
+                list_push_front(&List[idx],&(newNode->elem));
+            else{
+                struct list_elem* before = findXth(&List[idx],pos);
+                list_insert(before,&(newNode->elem));  
+            }
         }
         else if(!strcmp(argv[0],"list_empty")){
-
+            int idx = argv[1][4]-'0';
+            if(list_empty(&List[idx]))
+                printf("true\n");
+            else
+                printf("false\n");
         }
-        else if(!strcmp(argv[0],"list__back")){
-
+        else if(!strcmp(argv[0],"list_back")){
+            int idx = argv[1][4]-'0';
+            struct list_elem* node = list_back(&List[idx]);
+            struct list_item* item = list_entry(node,struct list_item,elem);
+            printf("%d\n",item->data);
         }
         else if(!strcmp(argv[0],"list_front")){
-
+            int idx = argv[1][4]-'0';
+            struct list_elem* node = list_front(&List[idx]);
+            struct list_item* item = list_entry(node,struct list_item,elem);
+            printf("%d\n",item->data);
         }
         else if(!strcmp(argv[0],"list_min")){
-
+            int idx = argv[1][4]-'0';
+            struct list_elem* node = list_min(&List[idx],list_comp,NULL);
+            struct list_item* item = list_entry(node,struct list_item,elem);
+            printf("%d\n",item->data);
         }
         else if(!strcmp(argv[0],"list_max")){
-
+            int idx = argv[1][4]-'0';
+            struct list_elem* node = list_max(&List[idx],list_comp,NULL);
+            struct list_item* item = list_entry(node,struct list_item,elem);
+            printf("%d\n",item->data);
         }
         else if(!strcmp(argv[0],"list_remove")){
-
+            int idx = argv[1][4]-'0';
+            int pos;
+            sscanf(argv[2],"%d",&pos);
+            struct list_elem* node = findXth(&List[idx],pos);
+            struct list_item* item = list_entry(node,struct list_item,elem);
+            list_remove(node);
+            free(item);
         }
         else if(!strcmp(argv[0],"list_reverse")){
-
+            int idx = argv[1][4]-'0';
+            list_reverse(&List[idx]);
         }
         else if(!strcmp(argv[0],"list_sort")){
-
+            int idx = argv[1][4]-'0';
+            list_sort(&List[idx],list_comp,NULL);
         }
         else if(!strcmp(argv[0],"list_splice")){
 
         }
         else if(!strcmp(argv[0],"list_swap")){
-
+            int idx = argv[1][4]-'0';
+            int num1,num2;
+            sscanf(argv[2],"%d",&num1);
+            sscanf(argv[3],"%d",&num2);
+            list_swap(findXth(&List[idx],num1),findXth(&List[idx],num2));
         }
         else if(!strcmp(argv[0],"list_shuffle")){
-
+            int idx = argv[1][4]-'0';
+            list_shuffle(&List[idx]);
         }
         else if(!strcmp(argv[0],"list_unique")){
 

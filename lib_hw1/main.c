@@ -7,9 +7,13 @@
 #define LIST 1
 #define HASH 2
 #define BITMAP 3
-struct list List[15];
-struct hash Hash[15];
-struct bitmap* Bitmap[15];
+struct list List[10];
+struct hash Hash[10];
+struct bitmap* Bitmap[10];
+struct list_item{
+    struct list_elem elem;
+    int data;
+};
 void parser(char str[], int* argc, char argv[100][100],char sep[]){
     char *token;
     *argc = 0;
@@ -19,7 +23,6 @@ void parser(char str[], int* argc, char argv[100][100],char sep[]){
         token = strtok(NULL,sep);
     }
 }
-
 int main(){
     char input[100];
     int argc;
@@ -62,10 +65,11 @@ int main(){
             if(Type == LIST){
                 int idx = argv[1][4]-'0';
                 for(struct list_elem* i = list_begin(&List[idx]);i!=list_end(&List[idx]);i=list_next(i)){
-                    struct list_node* node = list_entry(i,struct list_node,elem);
-                    printf("%d ", node->data);
+                    struct list_item* item = list_entry(i,struct list_item,elem);
+                    printf("%d ", item->data);
                 }
-                printf("\n");
+                if(!list_empty(&List[idx]))
+                    printf("\n");
             }
             else if(Type == HASH){
 
@@ -76,7 +80,13 @@ int main(){
         }
         ////////////////////////////////////////////// LIST
         else if(!strcmp(argv[0],"list_push_back")){
-
+            int idx = argv[1][4] - '0';
+            int data;
+            sscanf(argv[2], "%d", &data);
+            struct list_elem* newNode = (struct list_elem*)malloc(sizeof(struct list_elem));
+            struct list_item* item = list_entry(newNode,struct list_item,elem);
+            item->data = data;
+            list_push_back(&List[idx],newNode);
         }
         else if(!strcmp(argv[0],"list_push_front")){
 

@@ -17,7 +17,7 @@ do
 	#trimmed=$(echo $input | sed 's/\./-/' | sed 's/-in//')
 	trimmed=$(echo $input | sed 's/\.in//')
 	echo -n "Running test: $trimmed ... "
-	$($1 < $input > $trimmed.output) 
+	$(timeout 3s $1 < $input > $trimmed.output) 
 	diff -Bbi $trimmed.out $trimmed.output > $trimmed.result
 	if [ $? -eq 0 ]
 	then

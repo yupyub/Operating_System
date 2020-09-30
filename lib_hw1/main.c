@@ -187,7 +187,16 @@ int main(){
             list_sort(&List[idx],list_comp,NULL);
         }
         else if(!strcmp(argv[0],"list_splice")){
-
+            int idx1 = argv[1][4]-'0';
+            int idx2 = argv[3][4]-'0';
+            int pos1,pos2,pos3;
+            sscanf(argv[2],"%d",&pos1);
+            sscanf(argv[4],"%d",&pos2);
+            sscanf(argv[5],"%d",&pos3);
+            struct list_elem* node1 = list_findXth(&List[idx1],pos1);
+            struct list_elem* node2 = list_findXth(&List[idx2],pos2);
+            struct list_elem* node3 = list_findXth(&List[idx2],pos3);
+            list_splice(node1,node2,node3);
         }
         else if(!strcmp(argv[0],"list_swap")){
             int idx = argv[1][4]-'0';
@@ -203,12 +212,24 @@ int main(){
             list_shuffle(&List[idx]);
         }
         else if(!strcmp(argv[0],"list_unique")){
+            if(argc == 2){
+                int idx = argv[1][4]-'0';
+                list_unique(&List[idx],NULL,list_comp,NULL);
+            }
+            else if(argc == 3){
+                int idx1 = argv[1][4]-'0';
+                int idx2 = argv[2][4]-'0';
+                list_unique(&List[idx1],&List[idx2],list_comp,NULL);
+            }
 
         }
         else if(!strcmp(argv[0],"list_insert_ordered")){
-            
-
-
+            int idx = argv[1][4]-'0';
+            int data;
+            sscanf(argv[2],"%d",&data);
+            struct list_item* newNode = (struct list_item*)malloc(sizeof(struct list_item));
+            newNode->data = data;
+            list_insert_ordered(&List[idx],&(newNode->elem),list_comp,NULL);
         }
         ///////////////////////////////////////////////
     }

@@ -50,7 +50,11 @@ int main(){
 
             }
             else if(!strcmp(argv[1],"bitmap")){
-
+                Type = BITMAP;
+                int idx = argv[2][2]-'0';
+                size_t siz;
+                sscanf(argv[3],"%zu",&siz);
+                Bitmap[idx] = bitmap_create(siz);
             }
         }
         else if(!strcmp(argv[0],"delete")){
@@ -66,7 +70,9 @@ int main(){
 
             }
             else if(Type == BITMAP){
-
+                int idx = argv[1][2]-'0';
+                bitmap_destroy(Bitmap[idx]);
+                Bitmap[idx] = NULL;
             }
         }
         else if(!strcmp(argv[0],"dumpdata")){
@@ -83,7 +89,13 @@ int main(){
 
             }
             else if(Type == BITMAP){
-
+                int idx = argv[1][2]-'0';
+                if(Bitmap[idx] == NULL)
+                    continue;
+                size_t siz = bitmap_size(Bitmap[idx]);
+                for(size_t i = 0;i<siz;i++)
+                    printf("%d",bitmap_test(Bitmap[idx],i)?1:0);
+                printf("\n");
             }
         }
         ////////////////////////////////////////////// LIST
@@ -231,7 +243,46 @@ int main(){
             newNode->data = data;
             list_insert_ordered(&List[idx],&(newNode->elem),list_comp,NULL);
         }
-        ///////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
+        else if(!strcmp(argv[0],"bitmap_all")){
+        }
+        else if(!strcmp(argv[0],"bitmap_any")){
+        }
+        else if(!strcmp(argv[0],"bitmap_contains")){
+        }
+        else if(!strcmp(argv[0],"bitmap_count")){
+        }
+        else if(!strcmp(argv[0],"bitmap_dump")){
+        }
+        else if(!strcmp(argv[0],"bitmap_expand")){
+        }
+        else if(!strcmp(argv[0],"bitmap_flip")){
+        }
+        else if(!strcmp(argv[0],"bitmap_mark")){
+
+        }
+        else if(!strcmp(argv[0],"bitmap_none")){
+        }
+        else if(!strcmp(argv[0],"bitmap_plain")){
+        }
+        else if(!strcmp(argv[0],"bitmap_reset")){
+        }
+        else if(!strcmp(argv[0],"bitmap_scan")){
+        }
+        else if(!strcmp(argv[0],"bitmap_scan_and_flip")){
+        }
+        else if(!strcmp(argv[0],"bitmap_set")){
+        }
+        else if(!strcmp(argv[0],"bitmap_set_all")){
+        }
+        else if(!strcmp(argv[0],"bitmap_set_multiple")){
+        }
+        else if(!strcmp(argv[0],"bitmap_size")){
+        }
+        else if(!strcmp(argv[0],"bitmap_test")){
+        }
     }
     return 0;
 }

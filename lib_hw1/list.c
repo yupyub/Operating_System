@@ -1,6 +1,8 @@
 #include "list.h"
 #include <assert.h>	// Instead of	#include "../debug.h"
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 #define ASSERT(CONDITION) assert(CONDITION)	// patched for proj0-2
 
 /* Our doubly linked lists have two header elements: the "head"

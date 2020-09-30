@@ -261,27 +261,79 @@ int main(){
         else if(!strcmp(argv[0],"bitmap_flip")){
         }
         else if(!strcmp(argv[0],"bitmap_mark")){
-
+            int idx = argv[1][2]-'0';
+            size_t pos;
+            sscanf(argv[2],"%zu",&pos);
+            bitmap_mark(Bitmap[idx],pos);
         }
         else if(!strcmp(argv[0],"bitmap_none")){
         }
-        else if(!strcmp(argv[0],"bitmap_plain")){
-        }
         else if(!strcmp(argv[0],"bitmap_reset")){
+            int idx = argv[1][2]-'0';
+            size_t pos;
+            sscanf(argv[2],"%zu",&pos);
+            bitmap_reset(Bitmap[idx],pos);
         }
         else if(!strcmp(argv[0],"bitmap_scan")){
+            int idx = argv[1][2]-'0';
+            size_t st,cnt;
+            sscanf(argv[2],"%zu",&st);
+            sscanf(argv[3],"%zu",&cnt);
+            size_t ret = BITMAP_ERROR;
+            if(!strcmp(argv[4],"true"))
+                ret = bitmap_scan(Bitmap[idx],st,cnt,true);
+            else
+                ret = bitmap_scan(Bitmap[idx],st,cnt,false);
+            printf("%zu\n",ret);
         }
         else if(!strcmp(argv[0],"bitmap_scan_and_flip")){
+            int idx = argv[1][2]-'0';
+            size_t st,cnt;
+            sscanf(argv[2],"%zu",&st);
+            sscanf(argv[3],"%zu",&cnt);
+            size_t ret = BITMAP_ERROR;
+            if(!strcmp(argv[4],"true"))
+                ret = bitmap_scan_and_flip(Bitmap[idx],st,cnt,true);
+            else
+                ret = bitmap_scan_and_flip(Bitmap[idx],st,cnt,false);
+            printf("%zu\n",ret);
         }
         else if(!strcmp(argv[0],"bitmap_set")){
+            int idx = argv[1][2]-'0';
+            size_t pos;
+            sscanf(argv[2],"%zu",&pos);
+            if(!strcmp(argv[3],"true"))
+                bitmap_set(Bitmap[idx],pos,true);
+            else
+                bitmap_set(Bitmap[idx],pos,false);
         }
         else if(!strcmp(argv[0],"bitmap_set_all")){
+            int idx = argv[1][2]-'0';
+            if(!strcmp(argv[2],"true"))
+                bitmap_set_all(Bitmap[idx],true);
+            else
+                bitmap_set_all(Bitmap[idx],false);
         }
         else if(!strcmp(argv[0],"bitmap_set_multiple")){
+            int idx = argv[1][2]-'0';
+            size_t pos,len;
+            sscanf(argv[2],"%zu",&pos);
+            sscanf(argv[3],"%zu",&len);
+            if(!strcmp(argv[4],"true"))
+                bitmap_set_multiple(Bitmap[idx],pos,len,true);
+            else
+                bitmap_set_multiple(Bitmap[idx],pos,len,false);
         }
         else if(!strcmp(argv[0],"bitmap_size")){
+            int idx = argv[1][2]-'0';
+            size_t siz = bitmap_size(Bitmap[idx]);
+            printf("%zu\n",siz);
         }
         else if(!strcmp(argv[0],"bitmap_test")){
+            int idx = argv[1][2]-'0';
+            size_t pos;
+            sscanf(argv[2],"%zu",&pos);
+            printf("%s\n",bitmap_test(Bitmap[idx],pos)?"true":"false");
         }
     }
     return 0;

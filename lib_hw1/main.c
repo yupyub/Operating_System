@@ -194,13 +194,20 @@ int main(){
             int num1,num2;
             sscanf(argv[2],"%d",&num1);
             sscanf(argv[3],"%d",&num2);
-            list_swap(list_findXth(&List[idx],num1),list_findXth(&List[idx],num2));
+            struct list_elem* node1 = list_findXth(&List[idx],num1);
+            struct list_elem* node2 = list_findXth(&List[idx],num2);
+            list_swap(node1,node2);
         }
         else if(!strcmp(argv[0],"list_shuffle")){
             int idx = argv[1][4]-'0';
             list_shuffle(&List[idx]);
         }
         else if(!strcmp(argv[0],"list_unique")){
+
+        }
+        else if(!strcmp(argv[0],"list_insert_ordered")){
+            
+
 
         }
         ///////////////////////////////////////////////

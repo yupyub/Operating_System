@@ -66,6 +66,7 @@ list_less_func* LIST_LESS = list_comp1;
 /////// Choose one :: hash_int or hash_int_2 function    
 hash_hash_func* HASH_FUNC = hash_func1;
 //hash_hash_func* HASH_FUNC = hash_func2;
+///////
 hash_less_func* HASH_LESS = hash_comp1;
 hash_action_func* HASH_DESTRUCTOR = hash_destructor;
 hash_action_func* HASH_PRINT_DATA = hash_print_data;

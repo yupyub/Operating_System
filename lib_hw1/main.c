@@ -305,9 +305,16 @@ int main(){
             else if(!strcmp(argv[2],"triple"))
                 hash_apply(&Hash[idx],HASH_TRIPLE);
         }
-        else if(!strcmp(argv[0],"hash_delete")){
-        }
         else if(!strcmp(argv[0],"hash_find")){
+            int idx = argv[1][4]-'0';
+            int data;
+            sscanf(argv[2],"%d",&data);
+            struct hash_item* temp = (struct hash_item*)malloc(sizeof(struct hash_elem));
+            temp->data = data;
+            struct hash_elem* e = hash_find(&Hash[idx],&(temp->elem));
+            free(temp);
+            if(e!=NULL)
+                printf("%d\n",data);
         }
         else if(!strcmp(argv[0],"hash_empty")){
             int idx = argv[1][4]-'0';
@@ -333,9 +340,24 @@ int main(){
             newNode->data = data;
             hash_insert(&Hash[idx],&(newNode->elem));
         }
-        else if(!strcmp(argv[0],"hash_plain")){
-        }
         else if(!strcmp(argv[0],"hash_replace")){
+            int idx = argv[1][4]-'0';
+            int data;
+            sscanf(argv[2],"%d",&data);
+            struct hash_item* newNode = (struct hash_item*)malloc(sizeof(struct hash_item));
+            newNode->data = data;
+            struct hash_elem* ret = hash_replace(&Hash[idx],&(newNode->elem));
+            HASH_DESTRUCTOR(ret,NULL);
+        }
+        else if(!strcmp(argv[0],"hash_delete")){
+            int idx = argv[1][4]-'0';
+            int data;
+            sscanf(argv[2],"%d",&data);
+            struct hash_item* temp = (struct hash_item*)malloc(sizeof(struct hash_item));
+            temp->data = data;
+            struct hash_elem* ret = hash_delete(&Hash[idx],&(temp->elem));
+            free(temp);
+            HASH_DESTRUCTOR(ret,NULL);
         }
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////

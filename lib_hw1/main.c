@@ -11,6 +11,10 @@ struct list_item{
     struct list_elem elem;
     int data;
 };
+struct hash_item{
+    struct hash_elem elem;
+    int data;
+};
 struct list List[10];
 struct hash Hash[10];
 struct bitmap* Bitmap[10];
@@ -23,12 +27,31 @@ void parser(char str[], int* argc, char argv[100][100],char sep[]){
         token = strtok(NULL,sep);
     }
 }
-bool list_comp(const struct list_elem* a, const struct list_elem* b, void* aux){
+bool list_comp1(const struct list_elem* a, const struct list_elem* b, void* aux){
     struct list_item* itemA = list_entry(a,struct list_item,elem);
     struct list_item* itemB = list_entry(b,struct list_item,elem);
     return itemA->data < itemB->data;
 }
+unsigned hash_func1 (const struct hash_elem *e, void *aux){
+    struct hash_item* node = hash_entry(e,struct hash_item,elem);
+    return hash_int(node->data);
+}
+unsigned hash_func2 (const struct hash_elem *e, void *aux){
+    struct hash_item* node = hash_entry(e,struct hash_item,elem);
+    return hash_int_2(node->data);
+}
+
+bool hash_comp1 (const struct hash_elem *a, const struct hash_elem *b, void *aux){
+}
+
 int main(){
+    list_less_func* LLF = list_comp1;
+    //////////////////////////////////
+    /////// Choose one :: hash_int or hash_int_2 function    
+    hash_hash_func* HF = hash_func1;
+    //hash_hash_func* HF = hash_func1;
+    //////////////////////////////////
+    hash_less_func* HLF = hash_comp1;
     char input[100];
     int argc;
     char argv[100][100];
@@ -47,7 +70,9 @@ int main(){
                 list_init(&List[idx]);
             }
             else if(!strcmp(argv[1],"hashtable")){
-
+                Type = HASH;
+                int idx = argv[2][4]-'0';
+                //hash_init(&Hash[idx],0,0,NULL);
             }
             else if(!strcmp(argv[1],"bitmap")){
                 Type = BITMAP;
@@ -171,13 +196,13 @@ int main(){
         }
         else if(!strcmp(argv[0],"list_min")){
             int idx = argv[1][4]-'0';
-            struct list_elem* node = list_min(&List[idx],list_comp,NULL);
+            struct list_elem* node = list_min(&List[idx],LLF,NULL);
             struct list_item* item = list_entry(node,struct list_item,elem);
             printf("%d\n",item->data);
         }
         else if(!strcmp(argv[0],"list_max")){
             int idx = argv[1][4]-'0';
-            struct list_elem* node = list_max(&List[idx],list_comp,NULL);
+            struct list_elem* node = list_max(&List[idx],LLF,NULL);
             struct list_item* item = list_entry(node,struct list_item,elem);
             printf("%d\n",item->data);
         }
@@ -196,7 +221,7 @@ int main(){
         }
         else if(!strcmp(argv[0],"list_sort")){
             int idx = argv[1][4]-'0';
-            list_sort(&List[idx],list_comp,NULL);
+            list_sort(&List[idx],LLF,NULL);
         }
         else if(!strcmp(argv[0],"list_splice")){
             int idx1 = argv[1][4]-'0';
@@ -226,12 +251,12 @@ int main(){
         else if(!strcmp(argv[0],"list_unique")){
             if(argc == 2){
                 int idx = argv[1][4]-'0';
-                list_unique(&List[idx],NULL,list_comp,NULL);
+                list_unique(&List[idx],NULL,LLF,NULL);
             }
             else if(argc == 3){
                 int idx1 = argv[1][4]-'0';
                 int idx2 = argv[2][4]-'0';
-                list_unique(&List[idx1],&List[idx2],list_comp,NULL);
+                list_unique(&List[idx1],&List[idx2],LLF,NULL);
             }
 
         }
@@ -241,7 +266,24 @@ int main(){
             sscanf(argv[2],"%d",&data);
             struct list_item* newNode = (struct list_item*)malloc(sizeof(struct list_item));
             newNode->data = data;
-            list_insert_ordered(&List[idx],&(newNode->elem),list_comp,NULL);
+            list_insert_ordered(&List[idx],&(newNode->elem),LLF,NULL);
+        }
+        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////
+        else if(!strcmp(argv[0],"hash_apply")){
+        }
+        else if(!strcmp(argv[0],"hash_delete")){
+        }
+        else if(!strcmp(argv[0],"hash_etc")){
+        }
+        else if(!strcmp(argv[0],"hash_find")){
+        }
+        else if(!strcmp(argv[0],"hash_insert")){
+        }
+        else if(!strcmp(argv[0],"hash_plain")){
+        }
+        else if(!strcmp(argv[0],"hash_replace")){
         }
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////

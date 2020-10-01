@@ -582,7 +582,8 @@ struct list_elem* list_findXth(struct list* List,int X){
 void list_shuffle(struct list *list){
     srand(time(NULL));
     int Size = (int)list_size(list);
-    for(int i = 0;i<Size;i++){
-        list_swap(list_findXth(list,i),list_findXth(list,rand()%Size));
+    int shuffle = 3*Size+rand()%Size;
+    for(int i = 0;i<shuffle;i++){
+        list_swap(list_findXth(list,rand()%Size),list_findXth(list,rand()%Size));
     }
 }

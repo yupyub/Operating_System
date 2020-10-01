@@ -298,9 +298,10 @@ int main(){
             bitmap_dump(Bitmap[idx]);
         }
         else if(!strcmp(argv[0],"bitmap_expand")){
-            ////
-
-            ////
+            int idx = argv[1][2]-'0';
+            int siz;
+            sscanf(argv[2],"%d",&siz);
+            Bitmap[idx] = bitmap_expand(Bitmap[idx],siz);
         }
         else if(!strcmp(argv[0],"bitmap_flip")){
             int idx = argv[1][2]-'0';

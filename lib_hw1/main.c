@@ -53,7 +53,14 @@ void hash_print_data(struct hash_elem *e, void *aux){
     struct hash_item* node = hash_entry(e,struct hash_item,elem);
     printf("%d ",node->data);
 }
-
+void hash_square(struct hash_elem *e, void *aux){
+    struct hash_item* node = hash_entry(e,struct hash_item,elem);
+    node->data = (node->data)*(node->data);
+}
+void hash_triple(struct hash_elem *e, void *aux){
+    struct hash_item* node = hash_entry(e,struct hash_item,elem);
+    node->data = (node->data)*(node->data)*(node->data);
+}
 
 list_less_func* LIST_LESS = list_comp1;
 /////// Choose one :: hash_int or hash_int_2 function    
@@ -62,6 +69,9 @@ hash_hash_func* HASH_FUNC = hash_func1;
 hash_less_func* HASH_LESS = hash_comp1;
 hash_action_func* HASH_DESTRUCTOR = hash_destructor;
 hash_action_func* HASH_PRINT_DATA = hash_print_data;
+hash_action_func* HASH_SQUARE = hash_square;
+hash_action_func* HASH_TRIPLE = hash_triple;
+
 
 int main(){
     char input[100];
@@ -289,12 +299,31 @@ int main(){
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////
         else if(!strcmp(argv[0],"hash_apply")){
+            int idx = argv[1][4]-'0';
+            if(!strcmp(argv[2],"square"))
+                hash_apply(&Hash[idx],HASH_SQUARE);
+            else if(!strcmp(argv[2],"triple"))
+                hash_apply(&Hash[idx],HASH_TRIPLE);
         }
         else if(!strcmp(argv[0],"hash_delete")){
         }
-        else if(!strcmp(argv[0],"hash_etc")){
-        }
         else if(!strcmp(argv[0],"hash_find")){
+        }
+        else if(!strcmp(argv[0],"hash_empty")){
+            int idx = argv[1][4]-'0';
+            if(hash_empty(&Hash[idx]))
+                printf("true\n");
+            else
+                printf("false\n");
+        }
+        else if(!strcmp(argv[0],"hash_size")){
+            int idx = argv[1][4]-'0';
+            size_t siz = hash_size(&Hash[idx]);
+            printf("%zu\n",siz);
+        }
+        else if(!strcmp(argv[0],"hash_clear")){
+            int idx = argv[1][4]-'0';
+            hash_clear(&Hash[idx],HASH_DESTRUCTOR);
         }
         else if(!strcmp(argv[0],"hash_insert")){
             int idx = argv[1][4]-'0';

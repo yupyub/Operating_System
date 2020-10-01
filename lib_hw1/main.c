@@ -40,18 +40,30 @@ unsigned hash_func2 (const struct hash_elem *e, void *aux){
     struct hash_item* node = hash_entry(e,struct hash_item,elem);
     return hash_int_2(node->data);
 }
-
 bool hash_comp1 (const struct hash_elem *a, const struct hash_elem *b, void *aux){
+    struct hash_item* itemA = hash_entry(a,struct hash_item,elem);
+    struct hash_item* itemB = hash_entry(b,struct hash_item,elem);
+    return itemA->data < itemB->data;
+}
+void hash_destructor(struct hash_elem *e, void *aux){
+    struct hash_item* node = hash_entry(e,struct hash_item,elem);
+    free(node);
+}
+void hash_print_data(struct hash_elem *e, void *aux){
+    struct hash_item* node = hash_entry(e,struct hash_item,elem);
+    printf("%d ",node->data);
 }
 
+
+list_less_func* LIST_LESS = list_comp1;
+/////// Choose one :: hash_int or hash_int_2 function    
+hash_hash_func* HASH_FUNC = hash_func1;
+//hash_hash_func* HASH_FUNC = hash_func2;
+hash_less_func* HASH_LESS = hash_comp1;
+hash_action_func* HASH_DESTRUCTOR = hash_destructor;
+hash_action_func* HASH_PRINT_DATA = hash_print_data;
+
 int main(){
-    list_less_func* LLF = list_comp1;
-    //////////////////////////////////
-    /////// Choose one :: hash_int or hash_int_2 function    
-    hash_hash_func* HF = hash_func1;
-    //hash_hash_func* HF = hash_func1;
-    //////////////////////////////////
-    hash_less_func* HLF = hash_comp1;
     char input[100];
     int argc;
     char argv[100][100];
@@ -72,7 +84,7 @@ int main(){
             else if(!strcmp(argv[1],"hashtable")){
                 Type = HASH;
                 int idx = argv[2][4]-'0';
-                //hash_init(&Hash[idx],0,0,NULL);
+                hash_init(&Hash[idx],HASH_FUNC,HASH_LESS,NULL);
             }
             else if(!strcmp(argv[1],"bitmap")){
                 Type = BITMAP;
@@ -92,7 +104,8 @@ int main(){
                 }
             }
             else if(Type == HASH){
-
+                int idx = argv[1][4]-'0';
+                hash_destroy(&Hash[idx],HASH_DESTRUCTOR);
             }
             else if(Type == BITMAP){
                 int idx = argv[1][2]-'0';
@@ -111,7 +124,11 @@ int main(){
                     printf("\n");
             }
             else if(Type == HASH){
-
+                int idx = argv[1][4]-'0';
+                if(hash_empty(&Hash[idx]))
+                    continue;
+                hash_apply(&Hash[idx],HASH_PRINT_DATA);
+                printf("\n");
             }
             else if(Type == BITMAP){
                 int idx = argv[1][2]-'0';
@@ -196,13 +213,13 @@ int main(){
         }
         else if(!strcmp(argv[0],"list_min")){
             int idx = argv[1][4]-'0';
-            struct list_elem* node = list_min(&List[idx],LLF,NULL);
+            struct list_elem* node = list_min(&List[idx],LIST_LESS,NULL);
             struct list_item* item = list_entry(node,struct list_item,elem);
             printf("%d\n",item->data);
         }
         else if(!strcmp(argv[0],"list_max")){
             int idx = argv[1][4]-'0';
-            struct list_elem* node = list_max(&List[idx],LLF,NULL);
+            struct list_elem* node = list_max(&List[idx],LIST_LESS,NULL);
             struct list_item* item = list_entry(node,struct list_item,elem);
             printf("%d\n",item->data);
         }
@@ -221,7 +238,7 @@ int main(){
         }
         else if(!strcmp(argv[0],"list_sort")){
             int idx = argv[1][4]-'0';
-            list_sort(&List[idx],LLF,NULL);
+            list_sort(&List[idx],LIST_LESS,NULL);
         }
         else if(!strcmp(argv[0],"list_splice")){
             int idx1 = argv[1][4]-'0';
@@ -251,12 +268,12 @@ int main(){
         else if(!strcmp(argv[0],"list_unique")){
             if(argc == 2){
                 int idx = argv[1][4]-'0';
-                list_unique(&List[idx],NULL,LLF,NULL);
+                list_unique(&List[idx],NULL,LIST_LESS,NULL);
             }
             else if(argc == 3){
                 int idx1 = argv[1][4]-'0';
                 int idx2 = argv[2][4]-'0';
-                list_unique(&List[idx1],&List[idx2],LLF,NULL);
+                list_unique(&List[idx1],&List[idx2],LIST_LESS,NULL);
             }
 
         }
@@ -266,7 +283,7 @@ int main(){
             sscanf(argv[2],"%d",&data);
             struct list_item* newNode = (struct list_item*)malloc(sizeof(struct list_item));
             newNode->data = data;
-            list_insert_ordered(&List[idx],&(newNode->elem),LLF,NULL);
+            list_insert_ordered(&List[idx],&(newNode->elem),LIST_LESS,NULL);
         }
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////
@@ -280,6 +297,12 @@ int main(){
         else if(!strcmp(argv[0],"hash_find")){
         }
         else if(!strcmp(argv[0],"hash_insert")){
+            int idx = argv[1][4]-'0';
+            int data;
+            sscanf(argv[2],"%d",&data);
+            struct hash_item* newNode = (struct hash_item*)malloc(sizeof(struct hash_item));
+            newNode->data = data;
+            hash_insert(&Hash[idx],&(newNode->elem));
         }
         else if(!strcmp(argv[0],"hash_plain")){
         }

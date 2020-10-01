@@ -5,7 +5,7 @@ OBJECTS = main.o list.o bitmap.o hash.o hex_dump.o
 all = $(TARGET)
 
 $(TARGET) : $(OBJECTS) 
-	$(CC) -o $@ $^
+	$(CC) -Wall -o $@ $^
 
 clean : 
 	rm -f *.o

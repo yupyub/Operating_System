@@ -435,5 +435,5 @@ remove_elem (struct hash *h, struct hash_elem *e)
 unsigned hash_int_2(int i){
     if(i<0)
         i *= -1;
-    return i%10;
+    return (unsigned)(i%10);
 }

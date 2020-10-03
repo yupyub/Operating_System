@@ -433,6 +433,7 @@ remove_elem (struct hash *h, struct hash_elem *e)
 //////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////
 unsigned hash_int_2(int i){
-    i = i+1;
-    return hash_bytes (&i, sizeof i);
+    if(i<0)
+        i *= -1;
+    return i%10;
 }
